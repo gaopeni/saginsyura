@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>IDチェックツール</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    .highlight { background-color: #c6efce; }
+    #result { font-weight: bold; color: red; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>IDチェックツール</h1>
+  <label for="inputID">IDを入力してください：</label>
+  <input type="text" id="inputID">
+  <button onclick="checkID()">チェック</button>
+
+  <table id="idTable">
+    <thead>
+      <tr><th>ID</th><th>名前</th><th>チェック</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1001</td><td>山田太郎</td><td></td></tr>
+      <tr><td>1002</td><td>佐藤花子</td><td></td></tr>
+      <tr><td>1003</td><td>鈴木次郎</td><td></td></tr>
+      <tr><td>1004</td><td>高橋一郎</td><td></td></tr>
+      <tr><td>1005</td><td>田中美咲</td><td></td></tr>
+    </tbody>
+  </table>
+
+  <div id="result"></div>
+
+  <script>
+    function checkID() {
+      const input = document.getElementById("inputID").value.trim();
+      const rows = document.querySelectorAll("#idTable tbody tr");
+      let matchFound = false;
+
+      rows.forEach(row => {
+        const idCell = row.cells[0];
+        const checkCell = row.cells[2];
+        row.classList.remove("highlight");
+
+        if (idCell.textContent === input) {
+          checkCell.textContent = "✔";
+          row.classList.add("highlight");
+          matchFound = true;
+        } else {
+          checkCell.textContent = "";
+        }
+      });
+
+      document.getElementById("result").textContent = matchFound ? "詐欺師" : "";
+    }
+  </script>
+</body>
+</html>
