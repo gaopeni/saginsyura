@@ -2,41 +2,60 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>IDチェックツール</title>
+  <title>IDチェックツール（誰でも記入OK）</title>
   <style>
     body { font-family: sans-serif; padding: 20px; }
     table { border-collapse: collapse; width: 100%; margin-top: 10px; }
     th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
     .highlight { background-color: #c6efce; }
     #result { font-weight: bold; color: red; margin-top: 20px; }
+    textarea { width: 100%; height: 150px; margin-top: 10px; font-family: monospace; }
   </style>
 </head>
 <body>
-  <h1>IDチェックツール</h1>
-  <label for="inputID">IDを入力してください：</label>
+  <h1>IDチェックツール（誰でも記入OK）</h1>
+
+  <label for="inputID">🔍 チェックしたいIDを入力：</label>
   <input type="text" id="inputID">
   <button onclick="checkID()">チェック</button>
+
+  <div id="result"></div>
+
+  <h3>📝 IDリスト（ここに直接書き込めます）</h3>
+  <textarea id="idListInput">
+1001,山田太郎
+1002,佐藤花子
+1003,鈴木次郎
+1004,高橋一郎
+1005,田中美咲
+  </textarea>
+  <button onclick="updateTable()">テーブル更新</button>
 
   <table id="idTable">
     <thead>
       <tr><th>ID</th><th>名前</th><th>チェック</th></tr>
     </thead>
-    <tbody>
-      <tr><td>1001</td><td>山田太郎</td><td></td></tr>
-      <tr><td>1002</td><td>佐藤花子</td><td></td></tr>
-      <tr><td>1003</td><td>鈴木次郎</td><td></td></tr>
-      <tr><td>1004</td><td>高橋一郎</td><td></td></tr>
-      <tr><td>1005</td><td>田中美咲</td><td></td></tr>
-    </tbody>
+    <tbody></tbody>
   </table>
 
-  <div id="result"></div>
-
   <script>
+    function updateTable() {
+      const list = document.getElementById("idListInput").value.trim().split("\n");
+      const tbody = document.querySelector("#idTable tbody");
+      tbody.innerHTML = "";
+
+      list.forEach(line => {
+        const [id, name] = line.split(",");
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${id.trim()}</td><td>${name.trim()}</td><td></td>`;
+        tbody.appendChild(row);
+      });
+    }
+
     function checkID() {
       const input = document.getElementById("inputID").value.trim();
       const rows = document.querySelectorAll("#idTable tbody tr");
-      let matchFound = false;
+      let found = false;
 
       rows.forEach(row => {
         const idCell = row.cells[0];
@@ -46,14 +65,17 @@
         if (idCell.textContent === input) {
           checkCell.textContent = "✔";
           row.classList.add("highlight");
-          matchFound = true;
+          found = true;
         } else {
           checkCell.textContent = "";
         }
       });
 
-      document.getElementById("result").textContent = matchFound ? "詐欺師" : "";
+      document.getElementById("result").textContent = found ? "⚠️ 詐欺師" : "";
     }
+
+    // 初期化
+    updateTable();
   </script>
 </body>
 </html>
